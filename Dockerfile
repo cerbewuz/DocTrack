@@ -33,8 +33,8 @@ COPY . .
 # Copy built assets from Node stage
 COPY --from=node-builder /app/public/build ./public/build
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies (SKIP SCRIPTS TO AVOID BOOTSTRAP ERRORS)
+RUN composer install --no-dev --no-scripts --optimize-autoloader
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
