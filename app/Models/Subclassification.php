@@ -10,5 +10,13 @@ class Subclassification extends Model
     use HasFactory;
     protected $table = "subclassifications";
 
+    protected $fillable = [
+        'name',
+        'classification_id',
+    ];
 
+    public function classification()
+    {
+        return $this->belongsTo(Classification::class);
+    }
 }

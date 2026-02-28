@@ -17,7 +17,7 @@ class Document extends Model
         "description",
         "prioritization",
         "classification",
-        "subclasssification",
+        "subclassification",
         "action",
         "deadline",
         "file",
@@ -32,4 +32,17 @@ class Document extends Model
         return $this->belongsTo(User::class, 'receiver_user_id');
     }
 
-}
+        /**
+         * Retrieve the model for a bound value.
+         *
+         * @param  mixed  $value
+         * @param  string|null  $field
+         * @return \Illuminate\Database\Eloquent\Model|null
+         */
+        public function resolveRouteBinding($value, $field = null)
+        {
+            $id = str_starts_with($value, '#') ? $value : "#{$value}";
+            return $this->where('document_id', $id)->firstOrFail();
+        }
+    }
+    

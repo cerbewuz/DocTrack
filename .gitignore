@@ -18,3 +18,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+deploy.php
+package-lock.json
+package.json
+config/app.php
+config/app.php.bak
+bootstrap/app.php
+config/app.php
+config/app.php

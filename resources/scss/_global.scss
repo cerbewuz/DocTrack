@@ -2,6 +2,7 @@
     padding:0;
     margin:0;
     box-sizing: border-box;
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 html, body{
     
@@ -18,7 +19,7 @@ html, body{
     
 }
 
-.dark-mode {
+.dark {
     --primary-color: #111010;
     --secondary-color: #fff;
 }

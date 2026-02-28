@@ -9,4 +9,9 @@ class Classification extends Model
 {
     use HasFactory;
     protected $table = "classifications";
+
+    public function subclassifications()
+    {
+        return $this->hasMany(Subclassification::class);
+    }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
-use App\Models\Departments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Document;
@@ -18,8 +17,24 @@ class EmployeeHomeController extends Controller
     // condition to check if the user is an employee
     public function index()
     {
-        $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
-        return view('employee.home', compact('employee_name'));
+        $user = Auth::user();
+        $employee_name = $user && $user->usertype == 0 ? $user->username : null;
+        
+        // Get document counts for dashboard cards (user-specific)
+        $incomingCount = Document::where('receiver_user_id', $user->id)
+                                  ->where('status', 'incoming')
+                                  ->count();
+        $pendingCount = Document::where('sender_user_id', $user->id)
+                                 ->where('status', 'pending')
+                                 ->count();
+        $outgoingCount = Document::where('sender_user_id', $user->id)
+                                  ->where('status', 'outgoing')
+                                  ->count();
+        $receivedCount = Document::where('receiver_user_id', $user->id)
+                                  ->where('status', 'received')
+                                  ->count();
+        
+        return view('employee.home', compact('employee_name', 'incomingCount', 'pendingCount', 'outgoingCount', 'receivedCount'));
     }
 
     // for compose page
@@ -35,6 +50,18 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::user()->username; 
     
         return view('employee.compose', compact('users', 'prioritizations', 'classifications', 'subclassifications', 'actions', 'employee_name'));
+    }
+
+    public function profile()
+    {
+        $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
+        return view('employee.profile', compact('employee_name'));
+    }
+
+    public function settings()
+    {
+        $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
+        return view('employee.settings', compact('employee_name'));
     }
     
 

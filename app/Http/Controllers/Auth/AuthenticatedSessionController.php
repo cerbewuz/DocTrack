@@ -32,12 +32,11 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->usertype == 0) {
-                return redirect()->intended(route('employee.home'));
-            } elseif (Auth::user()->usertype == 1) {
+            if (Auth::user()->usertype == 1) {
                 return redirect()->intended(route('admin.home'));
+            } else {
+                return redirect()->intended(route('employee.home'));
             }
-            return redirect()->intended('/');
         }
 
         return back()->with('error', '');

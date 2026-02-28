@@ -29,7 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    const isDarkMode = localStorage.getItem('dark-mode') === 'enabled';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.textContent = 'Light mode';
+    }
+
     darkModeToggle.addEventListener('click', function () {
         document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('dark-mode', 'enabled');
+            darkModeToggle.textContent = 'Light mode';
+        } else {
+            localStorage.setItem('dark-mode', 'disabled');
+            darkModeToggle.textContent = 'Dark mode';
+        }
     });
 });

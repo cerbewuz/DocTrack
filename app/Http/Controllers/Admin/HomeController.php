@@ -17,13 +17,26 @@ class HomeController extends Controller
     // condition to check if user is admin
     public function index(){
         $admin_name = Auth::check() && Auth::user()->usertype == 1 ? Auth::user()->username : null;
-        return view('admin.home', compact('admin_name'));
+        
+        // Get document counts for dashboard cards
+        $incomingCount = Document::where('status', 'incoming')->count();
+        $pendingCount = Document::where('status', 'pending')->count();
+        $outgoingCount = Document::where('status', 'outgoing')->count();
+        $receivedCount = Document::where('status', 'received')->count();
+        
+        return view('admin.home', compact('admin_name', 'incomingCount', 'pendingCount', 'outgoingCount', 'receivedCount'));
     }
 
     // for profile page
     public function profile(){
         $admin_name = Auth::check() && Auth::user()->usertype == 1 ? Auth::user()->username : null;
         return view('admin.profile', compact('admin_name'));
+    }
+
+    // for settings page
+    public function settings(){
+        $admin_name = Auth::check() && Auth::user()->usertype == 1 ? Auth::user()->username : null;
+        return view('admin.settings', compact('admin_name'));
     }
 
     // for incoming page

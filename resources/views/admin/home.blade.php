@@ -1,207 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
+<x-layouts.app :userName="$admin_name">
+    <x-slot:title>Admin Dashboard</x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-     <title>DoTrack - Admin</title>
-    <link rel="stylesheet" href="../app/css/styles.css">
-    <link rel="icon" href="../assets/img/doctracklogo.png">
-     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-   
+    <style>
+        .dashboard-row {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 1.5rem !important;
+            width: 100% !important;
+        }
+        @media (max-width: 1024px) {
+            .dashboard-row {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .dashboard-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 
-</head>
+    <div class="space-y-6">
+        <!-- Welcome Header -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Dashboard</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">System-wide document overview and management.</p>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                {{ now()->format('l, F j, Y') }}
+            </div>
+        </div>
 
-<body>
-    <div class="wrapper-main-2">
-        <div class="sidebar">
-            <div class="container-flex-sidebar">
-                <div class="image-text">
-                    <img src="../assets/img/doctracklogo.png" alt="">
-                </div>
-                <div class="menu-bar">
-                    <div class="compose-Container active">
-                        <a href="{{route("admin.compose")}}">
-                            <div class="list">
-                                <span class="material-symbols-outlined">
-                                    edit_document
-                                </span>
-                                <span>Compose Mail</span>
-                            </div>
-                        </a>
+        <!-- Dashboard Cards -->
+        <div class="dashboard-row">
+            <!-- My Task -->
+            <x-dashboard.card 
+                title="System Tasks" 
+                :count="$incomingCount" 
+                id="task-counter"
+                icon="admin_panel_settings"
+                color="blue"
+                route="admin.incoming"
+            />
+
+            <!-- Contributed -->
+            <x-dashboard.card 
+                title="Total Contributions" 
+                :count="$pendingCount" 
+                id="contributed-counter"
+                icon="analytics"
+                color="amber"
+                route="admin.pending"
+            />
+
+            <!-- Outgoing -->
+            <x-dashboard.card 
+                title="Global Outgoing" 
+                :count="$outgoingCount" 
+                id="outgoing-doc-counter"
+                icon="unfold_more"
+                color="green"
+                route="admin.outgoing"
+            />
+
+            <!-- Finished -->
+            <x-dashboard.card 
+                title="Global Finished" 
+                :count="$receivedCount" 
+                id="finished-counter"
+                icon="done_all"
+                color="rose"
+                route="admin.received"
+            />
+        </div>
+
+        <!-- System Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <span class="material-symbols-outlined mr-2 text-indigo-500">monitoring</span>
+                    System Health
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Total Users</span>
+                        <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">Active</span>
                     </div>
-                    <div class="link-Container">
-
-                        <a href="{{route('admin.home')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    home
-                                </span>
-                                <span>Home</span>
-                            </div>
-                        </a>
-                        <a href="{{route('admin.incoming')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    move_to_inbox
-                                </span>
-                                <span>Incoming</span>
-                            </div>
-                        </a>
-                        <a href="{{route('admin.pending')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    pending_actions
-                                </span><span>Pending</span>
-                            </div>
-                        </a>
-                        <a href="{{route('admin.received')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    check_circle
-                                </span><span>Received</span></div>
-                        </a>
-                        <a href="{{route('admin.outgoing')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    outgoing_mail
-                                </span> <span>Outgoing</span></div>
-                        </a>
-                        <a href="{{route('admin.archive')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    archive
-                                </span><span>Archive</span></div>
-                        </a>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Database Status</span>
+                        <span class="text-sm font-bold text-green-600 dark:text-green-400">Connected</span>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="top-bar">
-            <div class="heading-content">
-                <div class="heading-content-searchbar">
-                    <input type="text" placeholder="   Search...">
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <span class="material-symbols-outlined mr-2 text-indigo-500">history</span>
+                    Recent Activity
+                </h2>
+                <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+                    <span class="material-symbols-outlined text-5xl mb-2">query_stats</span>
+                    <p>No recent activity logs.</p>
                 </div>
-
-
-
-               
-        <div class="profile-button">
-            <img src="../assets/img/sam.png" alt="Profile Picture" class="profile-pic">
-            <span class="name" id="name"><strong>{{$admin_name}}</strong></span>
-            <div class="dropdown-menu">
-                <a href="{{route('admin.profile')}}">Profile</a>
-                <a href="#" id="dark-mode-toggle">Dark mode</a>
-                
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
             </div>
-        </div>
-            
-        </div>
-    
-                
-
-    
-
-      </div>
-
-        <div class="content">
-            <div class="home-table">
-
-                <div class="box-table B">
-                    <div class="body">
-
-                        <h3>My Task</h3>
-                        <div class="abc">
-                            <h1></h1>
-                           
-                        </div>
-
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                           <a href="{{route('admin.incoming')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a> 
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box-table Y">
-                    <div class="body">
-
-                        <h3>Contributed Document</h3>
-                        <div class="abc">
-                            <h1></h1>
-                            
-                        </div>
-
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                           <a href="{{route('admin.pending')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a> 
-                            
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="box-table G">
-                    <div class="body">
-                        <h3>Outgoing Document</h3>
-                        <div class="abc">
-                            <h1></h1>
-                           
-                        </div>
-
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                           <a href="{{route('admin.outgoing')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a> 
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box-table R">
-                    <div class="body">
-                        <h3>Finished Document</h3>
-                        <div class="abc">
-                            <h1></h1>
-                            
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                           <a href="{{route('admin.received')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a>                            
-                        </div>
-                    </div>
-
-                </div>
-
-
-
-            </div>
-
-
-
-
-
-
-
         </div>
     </div>
-    
-    <script src="../js/logout-darkmode.js"></script>
-    <script src="../js/script.js"></script>
-</body>
-
-</html>
+</x-layouts.app>

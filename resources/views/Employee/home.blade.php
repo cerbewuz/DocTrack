@@ -1,174 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
+<x-layouts.app :userName="$employee_name">
+    <x-slot:title>Employee Dashboard</x-slot>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../app/css/styles.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <title>Dashboard</title>
-    <link rel="icon" href="../assets/app/doctracklogo.png">
-</head>
+    <style>
+        .dashboard-row {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 1.5rem !important;
+            width: 100% !important;
+        }
+        @media (max-width: 1024px) {
+            .dashboard-row {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .dashboard-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 
-<body>
-    <div class="wrapper-main-2">
-        <div class="sidebar">
-            <div class="container-flex-sidebar">
-                <div class="image-text">
-                    <img src="../assets/img/doctracklogo.png" alt="">
-                </div>
-                <div class="menu-bar">
-                    <div class="compose-Container active">
-                        <a href="{{route("employee.compose")}}">
-                            <div class="list">
-                                <span class="material-symbols-outlined">
-                                    edit_document
-                                </span>
-                                <span>Compose Mail</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="link-Container">
-
-                        <a href="{{route('employee.home')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    home
-                                </span>
-                                <span>Home</span>
-                            </div>
-                        </a>
-                        <a href="{{route('employee.incoming')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    move_to_inbox
-                                </span>
-                                <span>Incoming</span>
-                            </div>
-                        </a>
-                        <a href="{{route('employee.pending')}}">
-                            <div class="list2">
-                                <span class="material-symbols-outlined">
-                                    pending_actions
-                                </span><span>Pending</span>
-                            </div>
-                        </a>
-                        <a href="{{route('employee.received')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    check_circle
-                                </span><span>Received</span></div>
-                        </a>
-                        <a href="{{route('employee.outgoing')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    outgoing_mail
-                                </span> <span>Outgoing</span></div>
-                        </a>
-                        <a href="{{route('employee.archive')}}">
-                            <div class="list2"><span class="material-symbols-outlined">
-                                    archive
-                                </span><span>Archive</span></div>
-                        </a>
-                    </div>
-                </div>
+    <div class="space-y-6">
+        <!-- Welcome Header -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Welcome back, {{ $employee_name }}!</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Here's what's happening with your documents today.</p>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                {{ now()->format('l, F j, Y') }}
             </div>
         </div>
-        <div class="top-bar">
-            <div class="heading-content">
-                <div class="heading-content-searchbar">
-                    <input type="text" placeholder="   Search...">
-                </div>
 
+        <!-- Dashboard Cards -->
+        <div class="dashboard-row">
+            <!-- My Task -->
+            <x-dashboard.card 
+                title="My Tasks" 
+                :count="$incomingCount" 
+                id="task-counter"
+                icon="assignment"
+                color="blue"
+                route="employee.incoming"
+            />
 
+            <!-- Contributed -->
+            <x-dashboard.card 
+                title="Contributed" 
+                :count="$pendingCount" 
+                id="contributed-counter"
+                icon="share"
+                color="amber"
+                route="employee.pending"
+            />
 
-                <div class="profile-button">
-            <img src="../assets/img/sam.png" alt="Profile Picture" class="profile-pic">
-            <span class="name" id="name"><strong>{{$employee_name   }}</strong></span>
-            <div class="dropdown-menu">
-                <a href="{{route('admin.profile')}}">Profile</a>
-                <a href="#" id="dark-mode-toggle">Dark mode</a>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
+            <!-- Outgoing -->
+            <x-dashboard.card 
+                title="Outgoing" 
+                :count="$outgoingCount" 
+                id="outgoing-doc-counter"
+                icon="send"
+                color="green"
+                route="employee.outgoing"
+            />
+
+            <!-- Finished -->
+            <x-dashboard.card 
+                title="Finished" 
+                :count="$receivedCount" 
+                id="finished-counter"
+                icon="task_alt"
+                color="rose"
+                route="employee.received"
+            />
         </div>
-                
 
-            </div>
-
-        </div>
-
-
-        <div class="content">
-            <div class="home-table">
-                <div class="box-table B">
-                    <div class="body">
-                        <h3>My Task</h3>
-                        <div class="abc">
-                            <span class="counter" id="task-counter">0</span>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                            <a href="{{route('employee.incoming')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-table Y">
-                    <div class="body">
-                        <h3>Contributed Document</h3>
-                        <div class="abc">
-                            <span class="counter" id="contributed-counter">0</span>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                            <a href="{{route('employee.pending')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-table G">
-                    <div class="body">
-                        <h3>Outgoing Document</h3>
-                        <div class="abc">
-                            <span class="counter" id="outgoing-doc-counter">0</span>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                            <a href="{{route('employee.outgoing')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-table R">
-                    <div class="body">
-                        <h3>Finished Document</h3>
-                        <div class="abc">
-                            <span class="counter" id="finished-counter">0</span>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="chevron">
-                            <a href="{{route('employee.received')}}">View Details<span class="material-symbols-outlined">
-                                chevron_right
-                            </span></a>
-                        </div>
-                    </div>
-                </div>
+        <!-- Recent Activity Placeholder -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h2 class="text-lg font-semibold mb-4 flex items-center">
+                <span class="material-symbols-outlined mr-2 text-indigo-500">history</span>
+                Recent Activity
+            </h2>
+            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+                <span class="material-symbols-outlined text-5xl mb-2">query_stats</span>
+                <p>No recent activity to show.</p>
             </div>
         </div>
     </div>
-    <script src="../js/script.js"></script>
-    <script src="../js/logout-darkmode.js"></script>
-    
-
-</body>
-
-</html>
+</x-layouts.app>
