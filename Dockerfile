@@ -9,14 +9,14 @@ RUN npm run build
 # Stage 2: PHP Environment
 FROM php:8.2-apache
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip git libonig-dev libxml2-dev libzip-dev
+# Install system dependencies (Added libpq-dev for Postgres)
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip git libonig-dev libxml2-dev libzip-dev libpq-dev
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+# Install PHP extensions (Added pdo_pgsql for Postgres)
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -33,7 +33,7 @@ COPY . .
 # Copy built assets from Node stage
 COPY --from=node-builder /app/public/build ./public/build
 
-# Install PHP dependencies (SKIP SCRIPTS TO AVOID BOOTSTRAP ERRORS)
+# Install PHP dependencies
 RUN composer install --no-dev --no-scripts --optimize-autoloader
 
 # Set permissions
