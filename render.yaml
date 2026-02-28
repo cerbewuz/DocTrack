@@ -1,0 +1,29 @@
+databases:
+  - name: doctrack_db
+    databaseName: doctrack
+    user: doctrack_user
+    plan: free
+    region: ohio # You can change this or let Render decide
+
+services:
+  - type: web
+    name: doctrack-web
+    env: docker
+    plan: free
+    region: ohio
+    healthCheckPath: /
+    envVars:
+      - key: APP_KEY
+        generateValue: true # Render will generate a random secure string
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: doctrack_db
+          property: connectionString
+      - key: APP_URL
+        value: "https://doctrack-web.onrender.com" # Default render URL, you can change later
