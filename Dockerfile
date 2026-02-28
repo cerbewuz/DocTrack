@@ -10,16 +10,7 @@ RUN npm run build
 FROM php:8.2-apache
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y 
-    libpng-dev 
-    libjpeg-dev 
-    libfreetype6-dev 
-    zip 
-    unzip 
-    git 
-    libonig-dev 
-    libxml2-dev 
-    libzip-dev
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip git libonig-dev libxml2-dev libzip-dev
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -57,8 +48,4 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 EXPOSE 80
 
 # Start command
-CMD php artisan migrate --force && 
-    php artisan config:cache && 
-    php artisan route:cache && 
-    php artisan view:cache && 
-    apache2-foreground
+CMD php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
