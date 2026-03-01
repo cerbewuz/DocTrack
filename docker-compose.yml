@@ -14,7 +14,9 @@ services:
       DB_PORT: 5432
       DB_DATABASE: doctrack
       DB_USERNAME: doctrack_user
-      DB_PASSWORD: password123 # Change this!
+      DB_PASSWORD: password123
+    volumes:
+      - ./storage/app/public:/var/www/html/storage/app/public
     depends_on:
       - db
 
@@ -24,7 +26,7 @@ services:
     environment:
       POSTGRES_DB: doctrack
       POSTGRES_USER: doctrack_user
-      POSTGRES_PASSWORD: password123 # Change this!
+      POSTGRES_PASSWORD: password123
     volumes:
       - db_data:/var/lib/postgresql/data
 
