@@ -80,7 +80,7 @@ class DocumentsController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = uniqid() . '.' . $file->extension(); // Use extension() instead of getClientOriginalExtension()
             $file->move(public_path('document'), $filename);
             $document->file = $filename;
         } else {
@@ -123,13 +123,23 @@ class DocumentsController extends Controller
     }
     public function index()
     {
-        $document = Document::all();
-        return view('document.index', compact('document'))->with('success', 'Document created successfully.');
+        // Limit to documents where user is sender or receiver for security
+        $user = Auth::user();
+        $document = Document::where('sender_user_id', $user->id)
+                            ->orWhere('receiver_user_id', $user->id)
+                            ->get();
+        return view('document.index', compact('document'))->with('success', 'Document list retrieved.');
     }
 
     public function show(Document $document)
     {
         $user = Auth::user();
+        
+        // Authorization: Check if user is sender or receiver
+        if ($document->sender_user_id !== $user->id && $document->receiver_user_id !== $user->id) {
+            abort(403, 'Unauthorized access to this document.');
+        }
+
         $view = $user->usertype == 1 ? 'admin.view-document' : 'Employee.view-document';
         $name_var = $user->usertype == 1 ? 'admin_name' : 'employee_name';
 
@@ -156,6 +166,10 @@ class DocumentsController extends Controller
 
     public function moveToPending(Document $document)
     {
+        if ($document->sender_user_id !== Auth::id() && $document->receiver_user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $document->status = 'pending';
         $document->save();
         return redirect()->back()->with('success', 'Document moved to pending.');
@@ -163,6 +177,10 @@ class DocumentsController extends Controller
 
     public function moveToArchive(Document $document)
     {
+        if ($document->sender_user_id !== Auth::id() && $document->receiver_user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $document->status = 'archive';
         $document->save();
         return redirect()->back()->with('success', 'Document moved to archive.');
@@ -170,6 +188,10 @@ class DocumentsController extends Controller
 
     public function download(Document $document)
     {
+        if ($document->sender_user_id !== Auth::id() && $document->receiver_user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $filePath = public_path('document/' . $document->file);
         
         if (file_exists($filePath)) {

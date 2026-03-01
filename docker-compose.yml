@@ -12,9 +12,9 @@ services:
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: 5432
-      DB_DATABASE: doctrack
-      DB_USERNAME: doctrack_user
-      DB_PASSWORD: password123
+      DB_DATABASE: ${DB_DATABASE:-doctrack}
+      DB_USERNAME: ${DB_USERNAME:-doctrack_user}
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./storage/app/public:/var/www/html/storage/app/public
     depends_on:
@@ -24,9 +24,9 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_DB: doctrack
-      POSTGRES_USER: doctrack_user
-      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: ${DB_DATABASE:-doctrack}
+      POSTGRES_USER: ${DB_USERNAME:-doctrack_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
 
