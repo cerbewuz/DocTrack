@@ -9,10 +9,10 @@
     <meta name="author" content="DocTrack">
     
     <!-- Open Graph -->
-    <meta property="og:title" content="DocTrack - Intelligent Document Management">
+    <meta property="og:title" content="DocTrack">
     <meta property="og:description" content="Track, route, and manage documents across your organization. From composition to archive, DocTrack keeps your workflow organized.">
     <meta property="og:type" content="website">
-    
+
     <script>
         if (localStorage.getItem('dark-mode') === 'enabled') {
             document.documentElement.classList.add('dark');
@@ -20,9 +20,8 @@
             document.documentElement.classList.remove('dark');
         }
     </script>
-    
-    <title>DocTrack - Intelligent Document Management</title>
-    
+
+    <title>DocTrack</title>    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
