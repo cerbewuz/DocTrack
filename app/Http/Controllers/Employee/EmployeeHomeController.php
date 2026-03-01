@@ -34,7 +34,7 @@ class EmployeeHomeController extends Controller
                                   ->where('status', 'received')
                                   ->count();
         
-        return view('employee.home', compact('employee_name', 'incomingCount', 'pendingCount', 'outgoingCount', 'receivedCount'));
+        return view('Employee.home', compact('employee_name', 'incomingCount', 'pendingCount', 'outgoingCount', 'receivedCount'));
     }
 
     // for compose page
@@ -49,19 +49,19 @@ class EmployeeHomeController extends Controller
     
         $employee_name = Auth::user()->username; 
     
-        return view('employee.compose', compact('users', 'prioritizations', 'classifications', 'subclassifications', 'actions', 'employee_name'));
+        return view('Employee.compose', compact('users', 'prioritizations', 'classifications', 'subclassifications', 'actions', 'employee_name'));
     }
 
     public function profile()
     {
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
-        return view('employee.profile', compact('employee_name'));
+        return view('Employee.profile', compact('employee_name'));
     }
 
     public function settings()
     {
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
-        return view('employee.settings', compact('employee_name'));
+        return view('Employee.settings', compact('employee_name'));
     }
     
 
@@ -70,7 +70,7 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
         $documents = Document::where("status", 'incoming')->get();
 
-        return view("employee.incoming", compact('employee_name', 'documents'));
+        return view("Employee.incoming", compact('employee_name', 'documents'));
     }
 
     public function received()
@@ -78,7 +78,7 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
         $documents = Document::where("status", 'received')->get();
 
-        return view("employee.received", compact('employee_name', 'documents'));
+        return view("Employee.received", compact('employee_name', 'documents'));
     }
 
     public function outgoing()
@@ -86,7 +86,7 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
         $documents = Document::where("status", 'outgoing')->get();
 
-        return view("employee.outgoing", compact('employee_name', 'documents'));
+        return view("Employee.outgoing", compact('employee_name', 'documents'));
     }
 
     public function pending()
@@ -94,7 +94,7 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
         $documents = Document::where('status', 'pending')->get();
 
-        return view("employee.pending", compact('employee_name', 'documents'));
+        return view("Employee.pending", compact('employee_name', 'documents'));
     }
 
     public function archive()
@@ -102,7 +102,7 @@ class EmployeeHomeController extends Controller
         $employee_name = Auth::check() && Auth::user()->usertype == 0 ? Auth::user()->username : null;
         $documents = Document::where('status', 'archive')->get();
 
-        return view("employee.archive", compact('employee_name', 'documents'));
+        return view("Employee.archive", compact('employee_name', 'documents'));
     }
 
     // public function show($id)

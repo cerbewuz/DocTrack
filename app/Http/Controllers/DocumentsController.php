@@ -113,7 +113,7 @@ class DocumentsController extends Controller
                              ->orderBy('created_at', 'desc')
                              ->get();
         
-        $view = $user->usertype == 1 ? 'admin.drafts' : 'employee.drafts';
+        $view = $user->usertype == 1 ? 'admin.drafts' : 'Employee.drafts';
         $name_var = $user->usertype == 1 ? 'admin_name' : 'employee_name';
         
         return view($view, [
@@ -130,7 +130,7 @@ class DocumentsController extends Controller
     public function show(Document $document)
     {
         $user = Auth::user();
-        $view = $user->usertype == 1 ? 'admin.view-document' : 'employee.view-document';
+        $view = $user->usertype == 1 ? 'admin.view-document' : 'Employee.view-document';
         $name_var = $user->usertype == 1 ? 'admin_name' : 'employee_name';
 
         return view($view, [
