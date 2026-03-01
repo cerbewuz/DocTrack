@@ -50,14 +50,10 @@ class ProfileController extends Controller
         
         try {
             $decryptedContents = \Illuminate\Support\Facades\Crypt::decrypt($encryptedContents);
-            
-            $mimeType = Storage::disk('public')->mimeType($path);
-            // Since it's encrypted, mimeType might fail or return application/octet-stream.
-            // We can try to guess it or just serve it as image if we know it was an image.
-            
-            return response($decryptedContents)->header('Content-Type', 'image/jpeg'); // Default to jpeg, browsers are usually good at handling this
+            return response($decryptedContents)->header('Content-Type', 'image/jpeg');
         } catch (\Exception $e) {
-            abort(500, 'Failed to decrypt image.');
+            // If decryption fails, return 404 instead of crashing with 500
+            abort(404);
         }
     }
 
